@@ -47,7 +47,7 @@ const EditMovieForm = (props) => {
       .then((res) => {
         setMovies(prevMovies => prevMovies.map(oldMovie => oldMovie.id === id ? movie : oldMovie))
         // and also navigate the app to the updated movie path
-        navigate(`/movies/${id}`)
+        navigate(`/movies`)
       })
   }
 
