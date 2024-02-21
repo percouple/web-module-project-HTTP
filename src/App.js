@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import MovieList from './components/MovieList';
 import Movie from './components/Movie';
 import EditMovieForm from './components/EditMovieForm';
@@ -25,10 +25,18 @@ const App = (props) => {
       });
   }, []);
 
+  const navigate = useNavigate();
+
   const deleteMovie = (id) => {
     // Make a DELETE request using Axios
+    axios.delete(`http://localhost:9000/api/movies/${id}`)
     // On success update the movies list in state
+    .then((res) => {
+      console.log(res)
+      setMovies(res.data)
+    })
     // and navigate the user to /movies
+    navigate('/movies');
     // Hand this function down to the correct component
   }
 
@@ -50,7 +58,7 @@ const App = (props) => {
           <Routes>
             <Route path="movies/edit/:id" element={<EditMovieForm setMovies={setMovies}/>}/>
 
-            <Route path="movies/:id" element={<Movie />}/>
+            <Route path="movies/:id" element={<Movie deleteMovie={deleteMovie}/>}/>
 
             <Route path="movies" element={<MovieList movies={movies} />} />
 
