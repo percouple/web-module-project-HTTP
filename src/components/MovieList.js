@@ -22,7 +22,7 @@ const MovieList = (props) => {
 
         <tbody>
           {
-            movies.map(movie => <MovieListItem key={movie.id} movie={movie} />)
+            movies.map((movie) => <MovieListItem key={movie.id} movie={movie} />)
           }
         </tbody>
       </table>

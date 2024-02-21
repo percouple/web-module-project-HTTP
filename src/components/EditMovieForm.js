@@ -7,14 +7,30 @@ import axios from 'axios';
 const EditMovieForm = (props) => {
   const navigate = useNavigate();
 
+  // grab id from the url bar
+  const { id } = useParams();
+
+  // get the movie that we're currently looking at, by get request by our id above
+  useEffect(() => {
+    axios.get(`http://localhost:9000/api/movies/${id}`)
+      .then((res) => {
+        setMovie(res.data)
+      })
+  }, [])
+  
+  // get the setMovies state changer from App.js for the put request
   const { setMovies } = props;
-  const [movie, setMovie] = useState({
+
+  const initialMovie = {
     title: "",
     director: "",
     genre: "",
     metascore: 0,
     description: ""
-  });
+  }
+  // set up our state for the edit page
+  const [movie, setMovie] = useState(initialMovie);
+  
 
   const handleChange = (e) => {
     setMovie({
@@ -26,8 +42,13 @@ const EditMovieForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Make your put request here
+    axios.put(`http://localhost:9000/api/movies/${id}`, movie)
     // On success, set the updated movies in state
-    // and also navigate the app to the updated movie path
+      .then((res) => {
+        setMovies(prevMovies => prevMovies.map(oldMovie => oldMovie.id === id ? movie : oldMovie))
+        // and also navigate the app to the updated movie path
+        navigate(`/movies/${id}`)
+      })
   }
 
   const { title, director, genre, metascore, description } = movie;
@@ -64,7 +85,7 @@ const EditMovieForm = (props) => {
           </div>
           <div className="modal-footer">
             <input type="submit" className="btn btn-info" value="Save" />
-            <Link to={`/movies/1`}><input type="button" className="btn btn-default" value="Cancel" /></Link>
+            <Link to={`/movies/${id}`}><input type="button" className="btn btn-default" value="Cancel" /></Link>
           </div>
         </form>
       </div>
